@@ -21,7 +21,23 @@
 <footer id="colophon" class="site-footer" role="contentinfo">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-3">
+                <p style="text-align:center;">Footer Logo</p>
+            </div>
+            <div class="col-md-6">
+                <?php
+                // Footer Menu
+                $footerArgs = array(
+                    'theme_location' => 'footer',
+                    'container' => false,
+                    'menu_class' => 'footer-menu menu',
+                    'menu_id' => 'footer-menu',
+                    //'fallback_cb' => false
+                );
+                wp_nav_menu($footerArgs);
+                ?>
+            </div>
+            <div class="col-md-3">
                 <?php if ( is_active_sidebar( 'footer-content' ) ) : ?>
                     <!-- Footer Content -->
                     <?php dynamic_sidebar( 'footer-content' ); ?>
@@ -35,15 +51,6 @@
 </footer><!-- #colophon -->
 
 </div><!-- #page -->
-
-<?php if ( is_active_sidebar( 'floating-form' ) ) : ?>
-    <div id="contact-float" class="floating-form">
-        <span class="toggle">Chat Now! <i class="fa fa-envelope"></i></span>
-        <div class="inner">
-            <?php dynamic_sidebar( 'floating-form' ); ?>
-        </div>
-    </div>
-<?php endif; ?>
 
 <?php wp_footer(); ?>
 <!--[if lt IE 9]>

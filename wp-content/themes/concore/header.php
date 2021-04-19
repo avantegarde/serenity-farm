@@ -92,43 +92,44 @@
 
                             <!-- Collect the nav links, forms, and other content for toggling -->
                             <div class="collapse navbar-collapse" id="navbar-main">
-                                <?php
-                                // Main Menu LEFT
-                                $defaults_left = array(
-                                    'theme_location' => 'menu-left',
-                                    'container' => false,
-                                    'menu_class' => 'primary nav navbar-nav nav-left',
-                                    'menu_id' => 'primary-left'
-                                );
-                                wp_nav_menu($defaults_left); ?>
+                                <div class="flex-nav">
+                                    <?php
+                                    // Main Menu LEFT
+                                    $defaults_left = array(
+                                        'theme_location' => 'menu-left',
+                                        'container' => false,
+                                        'menu_class' => 'primary nav navbar-nav nav-left',
+                                        'menu_id' => 'primary-left'
+                                    );
+                                    wp_nav_menu($defaults_left); ?>
 
-                                <h1 id="logo">
-                                    <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
-                                        <img src="<?php echo get_template_directory_uri() . '/inc/images/logo.png'; ?>" width="200" alt="<?php bloginfo('name'); ?>">
-                                        <span><?php bloginfo('name'); ?></span>
-                                    </a>
-                                </h1>
+                                    <h1 id="logo">
+                                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+                                            <img src="<?php echo get_template_directory_uri() . '/inc/images/logo.png'; ?>" width="200" alt="<?php bloginfo('name'); ?>">
+                                            <span><?php bloginfo('name'); ?></span>
+                                        </a>
+                                    </h1>
 
-                                <?php
-                                // Main Menu RIGHT
-                                $defaults_right = array(
-                                    'theme_location' => 'menu-right',
-                                    'container' => false,
-                                    'menu_class' => 'primary nav navbar-nav nav-right',
-                                    'menu_id' => 'primary-right'
-                                );
-                                wp_nav_menu($defaults_right);
-                                // Mobile Menu
-                                $mobileArgs = array(
-                                    'theme_location' => 'mobile-menu',
-                                    'container' => false,
-                                    'menu_class' => 'primary nav navbar-nav',
-                                    'menu_id' => 'mobile-menu',
-                                    'fallback_cb' => false
-                                );
-                                wp_nav_menu($mobileArgs);
-                                ?>
-
+                                    <?php
+                                    // Main Menu RIGHT
+                                    $defaults_right = array(
+                                        'theme_location' => 'menu-right',
+                                        'container' => false,
+                                        'menu_class' => 'primary nav navbar-nav nav-right',
+                                        'menu_id' => 'primary-right'
+                                    );
+                                    wp_nav_menu($defaults_right);
+                                    // Mobile Menu
+                                    $mobileArgs = array(
+                                        'theme_location' => 'mobile-menu',
+                                        'container' => false,
+                                        'menu_class' => 'primary nav navbar-nav',
+                                        'menu_id' => 'mobile-menu',
+                                        'fallback_cb' => false
+                                    );
+                                    wp_nav_menu($mobileArgs);
+                                    ?>
+                                </div><!-- .flex-nav -->
                             </div>
                         </nav>
                     </div><!-- .main-navigation -->

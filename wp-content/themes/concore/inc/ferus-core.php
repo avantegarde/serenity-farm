@@ -19,8 +19,11 @@ add_filter( 'script_loader_tag', 'my_async_scripts', 10, 3 ); */
 /******************************************************************************/
 function ferus_core_enqueue_custom_scripts() {
     /* CSS */
-    wp_enqueue_style('lato', 'https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i,900,900i');
-    wp_enqueue_style('pt-sans', 'https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i');
+    //wp_enqueue_style('lato', 'https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i,900,900i');
+    //wp_enqueue_style('pt-sans', 'https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i');
+    wp_enqueue_style('open-sans', 'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+    wp_enqueue_style('baskerville', 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+    wp_enqueue_style('great-vibes', 'https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
     //wp_enqueue_style('font-awesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     wp_enqueue_style('ferus-core-bootstrap-css', get_template_directory_uri() . '/css/bootstrap.min.css');
     wp_enqueue_style('slick-style', get_template_directory_uri() . '/css/slick.css');

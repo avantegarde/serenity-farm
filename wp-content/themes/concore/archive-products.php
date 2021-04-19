@@ -25,7 +25,7 @@ if ($archive_scroll->taxonomy === 'category') {
 <section id="page-header" class="parallax" data-plx-img="<?php echo get_template_directory_uri() . '/inc/images/resources-banner.jpg'; ?>">
     <div class="container">
         <div class="header-content">
-            <h1 class="page-title">News</h1>
+            <h1 class="page-title">Products</h1>
         </div>
     </div>
 </section>
