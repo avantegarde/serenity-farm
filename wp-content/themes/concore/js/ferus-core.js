@@ -30,18 +30,18 @@ jQuery(document).ready(function ($) {
     /**
      * Homepage Slider
      */
-    $('.home_slider').slick({
+    $('.homepage-slider > .elementor-container > .elementor-row > .elementor-column > .elementor-column-wrap > .elementor-widget-wrap').slick({
         infinite: true,
         dots: true,
-        arrows: false,
+        arrows: true,
         //autoplay: true,
         speed: 1000,
         autoplaySpeed: 4000,
         //fade: true,
     });
     /**
-   * Testimonial Slider
-   */
+     * Testimonial Slider
+     */
     $('.testimonial-slider > .elementor-column-wrap > .elementor-widget-wrap').slick({
         infinite: true,
         dots: true,

@@ -117,6 +117,7 @@ function patrick_user_can_richedit($c) {
 /**
  * Register Custom Image Sizes
  */
+add_image_size( 'standard', 800, 500, false );
 add_image_size('slider-thumb', 200, 100, array('center', 'center')); // Hard crop center
 add_image_size( 'headshot-sq', 800, 800, array( 'center', 'center' ) ); // Hard crop center
 
@@ -1133,233 +1134,101 @@ function article_list_shortcode($atts, $content = null) {
 
 add_shortcode('article-list', 'article_list_shortcode');
 /******************************************************************************
- * Featured Article Shortcode
+ * Remove Publish date and featured image from Market Dates post list
  ******************************************************************************/
-function featured_article_shortcode($atts, $content = null) {
-    ob_start();
-    global $post;
-    // Attributes
-    extract(shortcode_atts(
-            array(
-                'posts' => '1',
-                'category' => '',
-            ), $atts)
-    );
-    // Code
-    $recent_args = array(
-        'post_type' => 'post',
-        'category_name' => $category,
-        'posts_per_page' => $posts,
-        'order' => 'DESC'
-    );
-    $recent_query = new WP_Query($recent_args);
-    if ($recent_query->have_posts()) : ?>
-        <div class="featured-article">
-            <?php while ( $recent_query->have_posts() ) : $recent_query->the_post(); ?>
-                <?php
-                // Get Image
-                $image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'post-med');
-                if ($image) {
-                    $image = $image[0];
-                } else {
-                    $image = '/wp-content/themes/concore/inc/images/hero.jpg';
-                }
-                ?>
-                <div class="post-item">
-                    <article id="post-<?php echo $post->ID; ?>" class="post-<?php echo $post->ID; ?> post-inner">
-
-                        <a class="post-thumb" href="<?php echo get_permalink($post->ID); ?>" style="background-image: url(<?php echo $image; ?>);"></a><!-- .post-thumb -->
-
-                        <div class="post-content">
-                            <h2 class="post-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h2>
-                            <p class="content-blurb">
-                                <?php echo wp_trim_words(get_the_content(), 33, '...'); ?>
-                            </p>
-                            <a href="<?php the_permalink(); ?>" data-button="arrow">Read More</a>
-                        </div>
-
-                    </article>
-                </div><!-- .post-item -->
-            <?php endwhile; ?>
-        </div><!-- .featured-article -->
-    <?php else : ?>
-        <p>Sorry! No post found within your criteria.</p>
-    <?php endif;
-    $output = ob_get_clean();
-    return $output;
-}
-
-add_shortcode('featured-article', 'featured_article_shortcode');
+add_filter('manage_market_dates_posts_columns',function($column_headers) {
+    unset($column_headers['date']);
+    unset($column_headers['new_post_thumb']);
+    return $column_headers;
+});
 /******************************************************************************
- * Content Slider Shortcode
+ * Add Market Date Column to Market Dates post list
  ******************************************************************************/
-function content_slider_shortcode($atts, $content = null) {
+add_filter('manage_market_dates_posts_columns', function($columns) {
+	return array_merge($columns, ['market_date' => 'Market Date']);
+});
+
+add_action('manage_market_dates_posts_custom_column', function($column_key, $post_id) {
+	if ($column_key == 'market_date') {
+		$market_date_orig = get_post_meta($post_id, 'market_date', true);
+        $market_date = date("m/d/Y", strtotime($market_date_orig));
+		if ($market_date) {
+			echo '<span class="market_dates-date">'.$market_date.'</span>';
+		} else {
+			echo '-';
+		}
+	}
+}, 10, 2);
+/******************************************************************************
+ * Market Dates Backend Admin List sort by market date.
+ ******************************************************************************/
+add_action( 'pre_get_posts', 'market_dates_order' );
+function market_dates_order( $query ) {
+    if ( $query->is_main_query() && !is_admin() && is_post_type_archive('market_dates') ) {
+        $query->set( 'meta_key', 'market_date' );
+        $query->set( 'orderby', 'meta_value_num' );
+        $query->set( 'order', 'ASC' );
+    } elseif( is_admin() ) {
+        $post_type = $query->get('post_type');
+        if ( $post_type == 'market_dates' ) {
+            $query->set( 'meta_key', 'market_date' );
+            $query->set( 'orderby', 'meta_value_num' );
+            $query->set( 'order', 'ASC' );
+        }
+    }
+}
+/******************************************************************************
+ * Market Dates Shortcode
+ ******************************************************************************/
+function market_dates_shortcode($atts, $content = null) {
     ob_start();
     // Attributes
     extract(shortcode_atts(
             array(
                 'posts' => '4',
-                'category' => '',
-            ), $atts)
-    );
-
-    // Code
-    $recent_args = array(
-        'post_type' => 'post',
-        'category_name' => $category,
-        'posts_per_page' => $posts,
-        'order' => 'DESC'
-    );
-    $recent_query = new WP_Query($recent_args);
-    if ($recent_query->have_posts()) : ?>
-        <div class="content_slider content-slider">
-            <?php while ( $recent_query->have_posts() ) : $recent_query->the_post(); ?>
-                <?php
-                $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' );
-                $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/hero.jpg';
-                ?>
-                <div>
-                    <div class="col-md-7 content-img" data-col="content-slide">
-                        <div class="img-wrap" style="background-image:url(<?php echo $image; ?>);"></div>
-                        <!-- <img src="<?php //echo get_template_directory_uri(); ?>/inc/images/home-slide-01.jpg"> -->
-                    </div>
-                    <div class="col-md-5 slide-content" data-col="content-slide">
-                        <p class="category"><?php the_category(' | ', '', $post->ID); ?></p>
-                        <h3 class="entry-title"><a href="<?php the_permalink(); ?>"><?php echo the_title(); ?></a></h3>
-                        <!-- <p class="entry-excerpt"><?php // echo wp_trim_words(get_the_excerpt(), 18, '...'); ?></p> -->
-                        <p class="entry-excerpt"><?php echo get_the_excerpt(); ?></p>
-                        <p class="read-more"><a href="<?php the_permalink(); ?>" data-button>Learn More</a></p>
-                    </div>
-                </div>
-            <?php endwhile; ?>
-            <?php wp_reset_postdata(); ?>
-            <!-- <p class="see-all-posts"><a href="<?php // echo site_url(); ?>">See All Posts</a></p> -->
-        </div><!-- .recent-posts -->
-    <?php else : ?>
-        <p>Sorry! No posts found within your criteria.</p>
-    <?php endif;
-    $output = ob_get_clean();
-    return $output;
-}
-
-add_shortcode('content-slider', 'content_slider_shortcode');
-/******************************************************************************
- * Portfolio Shortcode
- ******************************************************************************/
-function portfolio_slider_shortcode($atts, $content = null) {
-    ob_start();
-    // Attributes
-    extract(shortcode_atts(
-            array(
-                'posts' => '4',
-                'category' => '',
-                'content' => '',
-            ), $atts)
-    );
-
-    $content_pos = $content?$content:'right';
-    $pos_class = 'content-pos-' . $content_pos;
-
-    // Code
-    $recent_args = array(
-        'post_type' => 'post',
-        'category_name' => $category,
-        'posts_per_page' => $posts,
-        'order' => 'DESC'
-    );
-    $recent_query = new WP_Query($recent_args);
-    if ($recent_query->have_posts()) : ?>
-        <div class="content_slider content-slider <?php echo $pos_class; ?>">
-            <?php while ( $recent_query->have_posts() ) : $recent_query->the_post(); ?>
-                <?php
-                $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' );
-                $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/hero.jpg';
-                $company_url = get_post_meta( get_the_ID(), 'portfolio_url', true );
-                $excerpt_length = 250;
-                $content = apply_filters('the_content', get_the_content());
-                $excerpt = truncate( $content, $excerpt_length, '...', false, true );
-                ?>
-                <div>
-                <?php if($content_pos === 'left') : ?>
-                    <div class="col-md-5 slide-content" data-col="content-slide">
-                        <h3 class="entry-title"><a href="<?php the_permalink(); ?>"><?php echo the_title(); ?></a></h3>
-                        <?php //if($company_url) : ?>
-                            <!-- <a class="link" href="<?php //echo 'http://' . $company_url; ?>"><?php //echo $company_url; ?></a></a> -->
-                        <?php //endif; ?>
-                        <div class="entry-excerpt"><?php echo $excerpt; ?></div>
-                        <p class="read-more"><a href="<?php the_permalink(); ?>" data-button>Learn More</a></p>
-                    </div>
-                    <div class="col-md-7 content-img" data-col="content-slide">
-                        <div class="img-wrap" style="background-image:url(<?php echo $image; ?>);"></div>
-                    </div>
-                <?php else : ?>
-                    <div class="col-md-7 content-img" data-col="content-slide">
-                        <div class="img-wrap" style="background-image:url(<?php echo $image; ?>);"></div>
-                    </div>
-                    <div class="col-md-5 slide-content" data-col="content-slide">
-                        <h3 class="entry-title"><a href="<?php the_permalink(); ?>"><?php echo the_title(); ?></a></h3>
-                        <a class="link" href="<?php the_permalink(); ?>">www.website.com</a></a>
-                        <div class="entry-excerpt"><?php echo $excerpt; ?></div>
-                        <p class="read-more"><a href="<?php the_permalink(); ?>" data-button>Learn More</a></p>
-                    </div>
-                <?php endif; ?>
-                </div>
-            <?php endwhile; ?>
-            <?php wp_reset_postdata(); ?>
-            <!-- <p class="see-all-posts"><a href="<?php // echo site_url(); ?>">See All Posts</a></p> -->
-        </div><!-- .recent-posts -->
-    <?php else : ?>
-        <p>Sorry! No posts found within your criteria.</p>
-    <?php endif;
-    $output = ob_get_clean();
-    return $output;
-}
-
-add_shortcode('portfolio-slider', 'portfolio_slider_shortcode');
-
-/******************************************************************************
- * Our Team Shortcode
- ******************************************************************************/
-function our_team_shortcode($atts, $content = null) {
-    ob_start();
-    // Attributes
-    extract(shortcode_atts(
-            array(
-                'posts' => '4',
-                'people' => '',
+                //'order' => 'ASC',
                 'bg' => 'light',
             ), $atts)
     );
     $bg_class = $bg;
 
     // Code
-    $recent_args = array(
-        'post_type' => 'our_team',
-        'tag' => $people,
+    $market_args = array(
+        'post_type' => 'market_dates',
         'posts_per_page' => $posts,
+        'meta_query' => array(
+            array(
+                'key' => 'market_date',
+                'type' => 'DATE'
+            )
+        ),
+        'orderby' => 'meta_value',
         'order' => 'ASC'
     );
-    $recent_query = new WP_Query($recent_args);
-    if ($recent_query->have_posts()) : ?>
-        <div class="our-team <?php echo $bg_class; ?>">
-            <?php while ( $recent_query->have_posts() ) : $recent_query->the_post(); ?>
+    $market_query = new WP_Query($market_args);
+    if ($market_query->have_posts()) : ?>
+        <div class="market-dates <?php echo $bg_class; ?>">
+            <?php while ( $market_query->have_posts() ) : $market_query->the_post(); ?>
                 <?php
-                $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'headshot-sq' );
-                $image = $feat_image ? $feat_image[0] : get_template_directory_uri() . '/inc/images/hero-sq.jpg';
-                $m_linkedin = get_field('member_linkedin');
-                $m_email = get_field('member_email');
-                $m_phone = get_field('member_phone');
-                $job_title = get_field('member_job_title');
-                $member_position = get_field('member_position');
+                $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
+                $image = $feat_image ? $feat_image[0] : get_template_directory_uri() . '/inc/images/default.jpg';
+                $m_date = get_field('market_date');
+                $market_date = date("M j", strtotime($m_date));
+                $m_address = get_field('market_address');
+                $m_start_time = get_field('market_start_time');
+                $m_end_time = get_field('market_end_time');
                 ?>
-                <div class="member col-sm-6 col-md-4">
-                    <a href="<?php the_permalink(); ?>" class="inner">
-                        <img src="<?php echo $image; ?>">
-                        <h3><?php the_title(); ?></h3>
-                        <h4><?php echo $job_title; ?></h4>
-                    </a>
+                <div class="market-item col-sm-6 col-md-3">
+                    <div class="inner">
+                        <img src="<?php echo $image; ?>" alt="<?php the_title(); ?> Market">
+                        <div class="market-details">
+                            <h4 class="m-date"><?php echo $market_date; ?></h4>
+                            <h3 class="m-title"><?php the_title(); ?></h3>
+                            <hr>
+                            <p class="m-address"><?php echo $m_address; ?></p>
+                            <p class="m-time"><?php echo $m_start_time .' - '. $m_end_time; ?></p>
+                        </div>
+                    </div>
                 </div>
             <?php endwhile; ?>
             <?php wp_reset_postdata(); ?>
@@ -1371,7 +1240,7 @@ function our_team_shortcode($atts, $content = null) {
     return $output;
 }
 
-add_shortcode('our-team', 'our_team_shortcode');
+add_shortcode('market-dates', 'market_dates_shortcode');
 /******************************************************************************
  * Gallery Shortcode Re-format
  ******************************************************************************/

@@ -20,11 +20,13 @@
 
 <footer id="colophon" class="site-footer" role="contentinfo">
     <div class="container">
-        <div class="row">
-            <div class="col-md-3">
-                <p style="text-align:center;">Footer Logo</p>
+        <div class="row flex-align">
+            <div id="footer-logo">
+                <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+                    <img src="<?php echo get_template_directory_uri() . '/inc/images/logo-white.png'; ?>" width="400" alt="<?php bloginfo('name'); ?>">
+                </a>
             </div>
-            <div class="col-md-6">
+            <div class="footer-menu-wrap">
                 <?php
                 // Footer Menu
                 $footerArgs = array(
@@ -37,15 +39,18 @@
                 wp_nav_menu($footerArgs);
                 ?>
             </div>
-            <div class="col-md-3">
+            <div class="footer-social">
                 <?php if ( is_active_sidebar( 'footer-content' ) ) : ?>
                     <!-- Footer Content -->
                     <?php dynamic_sidebar( 'footer-content' ); ?>
                 <?php endif; ?>
             </div>
-            <div class="col-sm-12">
-                <p class="copyright"><?php echo 'Copyright &copy; ' . get_bloginfo( 'name' ) . ' ' . date('Y'); ?>. All rights reserved. | <a href="/privacy-policy/">Privacy Policy</a></p>
-            </div>
+        </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <br>
+                    <p class="copyright"><?php echo 'Copyright &copy; ' . get_bloginfo( 'name' ) . ' ' . date('Y'); ?>. All rights reserved. | <a href="/privacy-policy/">Privacy Policy</a></p>
+                </div>
         </div>
     </div><!-- .inner -->
 </footer><!-- #colophon -->

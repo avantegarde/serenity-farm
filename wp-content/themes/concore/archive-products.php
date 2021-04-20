@@ -22,10 +22,10 @@ if ($archive_scroll->taxonomy === 'category') {
 }
 ?>
 
-<section id="page-header" class="parallax" data-plx-img="<?php echo get_template_directory_uri() . '/inc/images/resources-banner.jpg'; ?>">
+<section class="products-page-header">
     <div class="container">
         <div class="header-content">
-            <h1 class="page-title">Products</h1>
+            <h1 class="page-title">Our Products</h1>
         </div>
     </div>
 </section>
@@ -40,45 +40,8 @@ if ($archive_scroll->taxonomy === 'category') {
             </div><!-- #page-header -->
         <?php endif; ?>
 
-        <div class="container">
-
-            <form role="search" method="get" class="search-filter search" action="<?php echo site_url(); ?>">
-                <input type="hidden" name="search-type" value="blog-search"/>
-                <input type="blog-search" class="form-control search_text" name="s" action="" aria-label="..." placeholder="Search...">
-                <?php $catArgs = array(
-                    'show_option_all'    => 'All Topics',
-                    'class'              => 'cat-drop',
-                    'exclude'            => '1',
-                    'selected'           => $cat_id,
-                ); ?>
-                <?php wp_dropdown_categories($catArgs); ?>
-                <?php $authorArgs = array(
-                    'show_option_all'         => 'All Authors', // string
-                    'show_option_none'        => null, // string
-                    'hide_if_only_one_author' => null, // string
-                    'orderby'                 => 'display_name',
-                    'order'                   => 'ASC',
-                    'include'                 => null, // string
-                    'exclude'                 => '1', // string
-                    'multi'                   => false,
-                    'show'                    => 'display_name',
-                    'echo'                    => true,
-                    'selected'                => false,
-                    'include_selected'        => false,
-                    'name'                    => 'author', // string
-                    'id'                      => null, // integer
-                    'class'                   => 'author-drop', // string
-                    'blog_id'                 => $GLOBALS['blog_id'],
-                    'who'                     => null // string
-                ); ?>
-                <?php //wp_dropdown_users($authorArgs); ?>
-                <button class="button do_search">Go</button>
-            </form>
-
-        </div>
-
         <main id="main" class="site-main container" role="main">
-            <div class="row posts-grid-wrapper">
+            <div class="row products-grid-wrapper">
 
                 <?php
                 if ( have_posts() ) :
@@ -86,38 +49,42 @@ if ($archive_scroll->taxonomy === 'category') {
                     while ( have_posts() ) : the_post(); ?>
 
                         <?php
-                        $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'post-med' );
-                        $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/hero.jpg';
-                        $excerpt_length = 250;
-                        $content = apply_filters('the_content', get_the_content());
-                        $excerpt = truncate( $content, $excerpt_length, '...', false, true );
+                        $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'standard' );
+                        $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/default.jpg';
+                        if(get_field('product_price_range')) {
+                            $start_price = get_field('product_starting_price');
+                            $end_price = get_field('product_ending_price');
+                            $price = '$'.$start_price.' - '.'$'.$end_price;
+                        } else {
+                            $price = '$'.get_field('product_price');
+                        }
                         ?>
-                        <div class="post-item col-md-12">
+                        <div class="product-item col-md-3">
 
-                            <article id="post-<?php echo $post->ID; ?>" class="post-<?php echo $post->ID; ?> post-inner">
+                            <a id="product-<?php echo $post->ID; ?>" class="product-<?php echo $post->ID; ?> product-inner" href="<?php echo get_permalink($post->ID); ?>">
 
-                                <a class="post-thumb" href="<?php echo get_permalink($post->ID); ?>" style="background-image: url(<?php echo $image; ?>);"></a>
+                                <div class="product-thumb" href="<?php echo get_permalink($post->ID); ?>" style="background-image: url(<?php echo $image; ?>);"></div>
 
-                                <div class="post-content">
+                                <div class="product-details">
                                     <!-- <div class="category">
                                         <?php // the_category( ' | ', '', $post->ID ); ?>
-                                </div> -->
-                                    <h2 class="post-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                    </div> -->
+                                    <h2 class="product-title sans-serif">
+                                        <?php the_title(); ?>
                                     </h2>
-                                    <p class="author-date"><?php the_time('m-d-Y'); ?> | Author: <?php the_author(); ?></p>
-
-                                    <div class="content-blurb">
-                                        <?php the_excerpt(); ?>
-                                    </div>
+                                    <p class="price"><?php echo $price; ?></p>
+                                    <!-- <div class="content-blurb">
+                                        <?php // the_excerpt(); ?>
+                                    </div> -->
                                     <!-- <a href="<?php // the_permalink(); ?>" data-button="arrow">Learn More</a> -->
                                     <?php
-                                    if(get_the_tag_list()) {
+                                    /* if(get_the_tag_list()) {
                                         echo get_the_tag_list('<ul class="tag-list"><li>','</li><li>','</li></ul>');
-                                    }
+                                    }*/
                                     ?>
                                 </div>
-                            </article>
+                            </a>
+
                         </div>
 
                     <?php endwhile;
@@ -128,22 +95,22 @@ if ($archive_scroll->taxonomy === 'category') {
             </div><!-- .row -->
         </main><!-- #main -->
 
-        <!-- <div class="pagination">
-<?php /*
-global $wp_query;
-$big = 999999999; // need an unlikely integer
-$translated = __( 'Page', 'mytextdomain' ); // Supply translatable string
-echo paginate_links( array(
-'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-'format' => '?paged=%#%',
-'current' => max( 1, get_query_var('paged') ),
-'total' => $wp_query->max_num_pages,
-'before_page_number' => '<span class="screen-reader-text">'.$translated.' </span>',
-'prev_text' => '<',
-'next_text' => '>'
-) );
-*/ ?>
-</div> -->
+        <div class="pagination">
+            <?php
+            global $wp_query;
+            $big = 999999999; // need an unlikely integer
+            $translated = __( 'Page', 'mytextdomain' ); // Supply translatable string
+            echo paginate_links( array(
+            'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+            'format' => '?paged=%#%',
+            'current' => max( 1, get_query_var('paged') ),
+            'total' => $wp_query->max_num_pages,
+            'before_page_number' => '<span class="screen-reader-text">'.$translated.' </span>',
+            'prev_text' => '<',
+            'next_text' => '>'
+            ) );
+            ?>
+        </div>
 
     </div><!-- #primary -->
 
@@ -153,7 +120,7 @@ echo paginate_links( array(
 
 <?php get_footer(); ?>
 
-<span id="inifiniteLoader"><i class="fa fa-circle-o-notch"></i> Loading...</span>
+<!-- <span id="inifiniteLoader"><i class="fa fa-circle-o-notch"></i> Loading...</span>
 <script type="text/javascript">
     jQuery(document).ready(function($) {
         var count = 2;
@@ -189,4 +156,4 @@ echo paginate_links( array(
         }
 
     });// END document.ready
-</script>
+</script> -->

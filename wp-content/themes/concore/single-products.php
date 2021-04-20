@@ -12,34 +12,20 @@ get_header(); ?>
 <?php
 while (have_posts()) : the_post(); ?>
 
-    <?php
-    $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' );
-    $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/hero.jpg';
-    ?>
-    <section id="page-header" class="" style="background-image:url(<?php echo $image; ?>);"></section>
-
-
     <div id="primary" class="content-area">
         <main id="main" class="site-main" role="main">
-
-            <?php
-            /**
-             * Course Fields
-             */
-            $course_duration = get_field( "course_duration" );
-            $course_format = get_field( "course_format" );
-            ?>
 
             <article id="post-<?php the_ID(); ?>" <?php post_class('single-post'); ?>>
                 <div class="container">
                     <div class="entry-wrap col-md-10 col-md-push-1">
+                        <?php
+                        $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
+                        $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/hero.jpg';
+                        ?>
+                        <div id="single-header" class="nolazy" style="background-image:url(<?php echo $image; ?>);"></div>
 
                         <header class="entry-header">
                             <?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-                            <div class="entry-meta">
-                                <p class="duration"><strong>Duration:</strong> <?php echo $course_duration; ?></p>
-                                <p class="format"><strong>Format:</strong> <?php echo $course_format; ?></p>
-                            </div><!-- .entry-meta -->
                         </header><!-- .entry-header -->
 
                         <div class="entry-content">
@@ -49,8 +35,19 @@ while (have_posts()) : the_post(); ?>
                                 wp_kses( __( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'ferus_core' ), array( 'span' => array( 'class' => array() ) ) ),
                                 the_title( '<span class="screen-reader-text">"', '"</span>', false )
                             ) );
+
+                            wp_link_pages( array(
+                                'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'ferus_core' ),
+                                'after'  => '</div>',
+                            ) );
                             ?>
                         </div><!-- .entry-content -->
+                        <div class="entry-footer">
+                            <a href="/products"><< Back to Products</a>
+                            <div class="pre-order">
+                                <a href="/pre-order" data-button="green">PRE-ORDER TODAY</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -69,9 +66,10 @@ while (have_posts()) : the_post(); ?>
                 </div> -->
             <?php // endif; ?>
 
+
+
         </main><!-- #main -->
     </div><!-- #primary -->
-
 <?php // End of the loop.
 endwhile; ?>
 
