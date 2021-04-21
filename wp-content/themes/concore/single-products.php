@@ -35,15 +35,23 @@ while (have_posts()) : the_post(); ?>
                                 wp_kses( __( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'ferus_core' ), array( 'span' => array( 'class' => array() ) ) ),
                                 the_title( '<span class="screen-reader-text">"', '"</span>', false )
                             ) );
-
-                            wp_link_pages( array(
-                                'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'ferus_core' ),
-                                'after'  => '</div>',
-                            ) );
                             ?>
+                            <?php 
+                            $images = get_field('product_gallery');
+                            if( $images ): ?>
+                                <ul class="product-gallery">
+                                    <?php foreach( $images as $image ): ?>
+                                        <li>
+                                            <a class="lb-gallery" href="<?php echo esc_url($image['sizes']['large']); ?>">
+                                                <img src="<?php echo esc_url($image['sizes']['thumbnail']); ?>" alt="<?php echo esc_attr($image['alt']); ?>" />
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
                         </div><!-- .entry-content -->
                         <div class="entry-footer">
-                            <a href="/products"><< Back to Products</a>
+                            <a class="products-link" href="/products"><< Back to Products</a>
                             <div class="pre-order">
                                 <a href="/pre-order" data-button="green">PRE-ORDER TODAY</a>
                             </div>

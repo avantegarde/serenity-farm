@@ -126,24 +126,23 @@ if ($archive_scroll->taxonomy === 'category') {
                     get_template_part( 'template-parts/content', 'none' );
                 endif; ?>
             </div><!-- .row -->
+            <div class="pagination">
+                <?php
+                global $wp_query;
+                $big = 999999999; // need an unlikely integer
+                $translated = __( 'Page', 'mytextdomain' ); // Supply translatable string
+                echo paginate_links( array(
+                'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                'format' => '?paged=%#%',
+                'current' => max( 1, get_query_var('paged') ),
+                'total' => $wp_query->max_num_pages,
+                'before_page_number' => '<span class="screen-reader-text">'.$translated.' </span>',
+                'prev_text' => '<',
+                'next_text' => '>'
+                ) );
+                ?>
+            </div>
         </main><!-- #main -->
-
-        <!-- <div class="pagination">
-<?php /*
-global $wp_query;
-$big = 999999999; // need an unlikely integer
-$translated = __( 'Page', 'mytextdomain' ); // Supply translatable string
-echo paginate_links( array(
-'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-'format' => '?paged=%#%',
-'current' => max( 1, get_query_var('paged') ),
-'total' => $wp_query->max_num_pages,
-'before_page_number' => '<span class="screen-reader-text">'.$translated.' </span>',
-'prev_text' => '<',
-'next_text' => '>'
-) );
-*/ ?>
-</div> -->
 
     </div><!-- #primary -->
 
@@ -153,7 +152,7 @@ echo paginate_links( array(
 
 <?php get_footer(); ?>
 
-<span id="inifiniteLoader"><i class="fa fa-circle-o-notch"></i> Loading...</span>
+<!-- <span id="inifiniteLoader"><i class="fa fa-circle-o-notch"></i> Loading...</span>
 <script type="text/javascript">
     jQuery(document).ready(function($) {
         var count = 2;
@@ -189,4 +188,4 @@ echo paginate_links( array(
         }
 
     });// END document.ready
-</script>
+</script> -->

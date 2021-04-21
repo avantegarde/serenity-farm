@@ -1224,7 +1224,7 @@ function market_dates_shortcode($atts, $content = null) {
                 $m_start_time = get_field('market_start_time');
                 $m_end_time = get_field('market_end_time');
                 ?>
-                <div class="market-item col-sm-6 col-md-3">
+                <div class="market-item col-xs-6 col-sm-3 col-md-3">
                     <div class="inner">
                         <div class="market-img" style="background-image:url(<?php echo $image; ?>);"></div>
                         <div class="market-details">

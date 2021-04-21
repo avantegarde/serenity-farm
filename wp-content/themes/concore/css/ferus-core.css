@@ -1059,19 +1059,6 @@ ul.social li a:hover i {
 /*--------------------*
  *------ Header ------*
  *--------------------*/
-header.site-header {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 15px 0 15px 0;
-  position: relative;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 999999;
-  background: #ffffff;
-  color: #555555;
-}
 #page {
   padding-top: 0;
 }
@@ -1151,7 +1138,7 @@ header.site-header {
   top: 0;
   right: 0;
   left: 0;
-  background: none;
+  background: #ffffff;
   border-bottom: 15px solid #513417;
   z-index: 999;
 }
@@ -2008,7 +1995,7 @@ section.banner-bottom {
   margin-bottom: -15px;
 }
 @media screen and (max-width: 767px) {
-  #page section {
+  body:not(.elementor-page) #page section {
     padding: 30px 0;
   }
 }
@@ -4107,10 +4094,20 @@ span#inifiniteLoader.active i {
   background-position: center;
 }
 /*-- Main Content */
-.single #main {
+.single #main,
+.blog #page,
+.archive #page {
   background-color: #E6DACB;
   background-image: url('../inc/images/bg-repeat-light.png');
   background-repeat: repeat;
+}
+.blog #primary > .container,
+.blog #primary #main,
+.archive #primary > .container,
+.archive #primary #main {
+  background: #ffffff;
+  border-left: 2px solid #513417;
+  border-right: 2px solid #513417;
 }
 .single article.single-post #post-img {
   display: block;
@@ -5938,18 +5935,45 @@ section.services .service .inner h4 {
 .site-footer .menu li.current_page_item > a {
   color: #14a9c7;
 }
-@media screen and (max-width:500px) {
-  .footer-menu-wrap {
-    width: 100%;
-    float: none;
-    margin: 0;
+@media screen and (max-width: 1199px) {
+  .site-footer #footer-logo {
+    order: 1;
   }
-  .footer-menu-wrap:first-of-type {
-    border: none;
+  .site-footer .footer-menu-wrap {
+    order: 3;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  .site-footer .footer-social {
+    order: 2;
+    width: auto;
+    padding-left: 20px;
+  }
+}
+@media screen and (max-width:600px) {
+  .site-footer .menu li {
+    padding: 5px 10px;
   }
 }
 @media screen and (max-width:500px) {
-
+  .site-footer .footer-menu-wrap {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+  .site-footer .menu li {
+    padding: 10px;
+  }
+}
+@media screen and (max-width:400px) {
+  .site-footer .footer-social {
+    width: 100%;
+    padding: 15px 15px 0 15px;
+  }
+  .site-footer .footer-menu-wrap {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }
 /*--- Copyright ---*/
 .site-footer .copyright {
@@ -6183,6 +6207,63 @@ section.four-oh-four ul.error-page-links li a:hover {
   .products-grid-wrapper .product-item {
     width: 100%;
     margin: 15px auto;
+  }
+}
+/*--- Single Product ---*/
+ul.product-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 30px 0 0 0;
+}
+ul.product-gallery li {
+  display: block;
+  width: 25%;
+  padding: 15px;
+}
+ul.product-gallery li a {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0px 5px 5px 0px rgba(204, 204, 204, 0.75);
+}
+ul.product-gallery li img {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.single-products .entry-footer .products-link {
+  display: block;
+  margin: 15px 0;
+  font-size: 20px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #513417;
+}
+.single-products .entry-footer .pre-order {
+  display: block;
+  padding: 30px 0;
+}
+@media screen and (max-width: 991px) {
+  ul.product-gallery li {
+    width: calc(100% / 3);
+  }
+}
+@media screen and (max-width: 600px) {
+  ul.product-gallery li {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 400px) {
+  ul.product-gallery li {
+    width: 100%;
   }
 }
 /*--- Slideset Products ---*/
@@ -6585,7 +6666,7 @@ section.four-oh-four ul.error-page-links li a:hover {
   clear: both;
 }
 .market-dates .market-item {
-  padding: 0;
+  margin: 15px 0;
 }
 .market-dates .market-item .market-img {
   display: block;
@@ -6643,6 +6724,28 @@ section.four-oh-four ul.error-page-links li a:hover {
   padding: 0;
   font-weight: 400;
 }
+.market-dates .market-item .inner .m-time {
+  font-weight: 600;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .market-dates .market-item .m-date {
+    font-size: 28px;
+    line-height: 30px;
+  }
+  .market-dates .market-item .m-title {
+    font-size: 18px;
+    line-height: 20px;
+    color: #ffffff;
+  }
+  .market-dates .market-item .inner p {
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .market-dates .market-item {
+    width: 100%;
+  }
+}
 /*--- Repeating BG Page ---*/
 .page-template-page_repeating-bg #content {
   background-color: #E6DACB;
@@ -6657,6 +6760,9 @@ section.four-oh-four ul.error-page-links li a:hover {
 .gform_wrapper.pre-order-form_wrapper li.gfield.gsection {
   border: none;
   padding: 0 15px;
+}
+.gform_wrapper.pre-order-form_wrapper .gsection {
+  margin-right: 0 !important;
 }
 .gform_wrapper.pre-order-form_wrapper h2.gsection_title {
   display: block;
@@ -6701,4 +6807,31 @@ section.four-oh-four ul.error-page-links li a:hover {
   font-size: 26px;
   font-weight: 600;
   text-transform: uppercase;
+}
+@media screen and (max-width: 767px) {
+  .gform_wrapper.pre-order-form_wrapper h2.gsection_title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .pre-order-form_wrapper li.gfield.col2 {
+    width: 90% !important;
+  }
+  .pre-order-form_wrapper li.gfield.col2 ul.gfield_checkbox > li {
+    width: 100%;
+    float: none;
+  }
+}
+@media screen and (max-width: 600px) {
+  .gform_wrapper.pre-order-form_wrapper h2.gsection_title {
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 450px) {
+  .pre-order-form_wrapper li.gfield.col2 {
+    width: 100% !important;
+  }
+  .pre-order-form_wrapper li.gfield.col2 ul.gfield_checkbox > li {
+    font-size: 18px;
+    line-height: 18px;
+  }
 }
