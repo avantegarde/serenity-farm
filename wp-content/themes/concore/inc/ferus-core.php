@@ -118,8 +118,10 @@ function patrick_user_can_richedit($c) {
  * Register Custom Image Sizes
  */
 add_image_size( 'standard', 800, 500, false );
+add_image_size( 'narrow', 600, 300, false );
 add_image_size('slider-thumb', 200, 100, array('center', 'center')); // Hard crop center
-add_image_size( 'headshot-sq', 800, 800, array( 'center', 'center' ) ); // Hard crop center
+add_image_size( 'square-med', 500, 500, array( 'center', 'center' ) ); // Hard crop center
+add_image_size( 'square-lg', 800, 800, array( 'center', 'center' ) ); // Hard crop center
 
 // Remove auto p from content (needed for proper html content in pages)
 //remove_filter( 'the_content', 'wpautop' );
@@ -328,6 +330,10 @@ function remove_widget_title($widget_title) {
  * Excerpt Length
  */
 function custom_excerpt_length( $length ) {
+    global $post;
+    if ($post->post_type == 'products'){
+        return 12;
+    }
     return 50;
 }
 add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
@@ -1220,7 +1226,7 @@ function market_dates_shortcode($atts, $content = null) {
                 ?>
                 <div class="market-item col-sm-6 col-md-3">
                     <div class="inner">
-                        <img src="<?php echo $image; ?>" alt="<?php the_title(); ?> Market">
+                        <div class="market-img" style="background-image:url(<?php echo $image; ?>);"></div>
                         <div class="market-details">
                             <h4 class="m-date"><?php echo $market_date; ?></h4>
                             <h3 class="m-title"><?php the_title(); ?></h3>

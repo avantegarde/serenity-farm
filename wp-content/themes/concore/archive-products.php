@@ -51,15 +51,8 @@ if ($archive_scroll->taxonomy === 'category') {
                         <?php
                         $feat_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'standard' );
                         $image = $feat_image[0] ? $feat_image[0] : get_template_directory_uri() . '/inc/images/default.jpg';
-                        if(get_field('product_price_range')) {
-                            $start_price = get_field('product_starting_price');
-                            $end_price = get_field('product_ending_price');
-                            $price = '$'.$start_price.' - '.'$'.$end_price;
-                        } else {
-                            $price = '$'.get_field('product_price');
-                        }
                         ?>
-                        <div class="product-item col-md-3">
+                        <div class="product-item col-xs-6 col-sm-4 col-md-3">
 
                             <a id="product-<?php echo $post->ID; ?>" class="product-<?php echo $post->ID; ?> product-inner" href="<?php echo get_permalink($post->ID); ?>">
 
@@ -72,10 +65,9 @@ if ($archive_scroll->taxonomy === 'category') {
                                     <h2 class="product-title sans-serif">
                                         <?php the_title(); ?>
                                     </h2>
-                                    <p class="price"><?php echo $price; ?></p>
-                                    <!-- <div class="content-blurb">
-                                        <?php // the_excerpt(); ?>
-                                    </div> -->
+                                    <div class="product-blurb">
+                                        <?php the_excerpt(); ?>
+                                    </div>
                                     <!-- <a href="<?php // the_permalink(); ?>" data-button="arrow">Learn More</a> -->
                                     <?php
                                     /* if(get_the_tag_list()) {
@@ -113,6 +105,12 @@ if ($archive_scroll->taxonomy === 'category') {
         </div>
 
     </div><!-- #primary -->
+
+    <section id="pre-order" class="tall bg-repeat-light">
+        <div class="container center">
+            <a href="/pre-order" data-button="green">PRE-ORDER TODAY!</a>
+        </div>
+    </section>
 
     <?php // get_sidebar(); ?>
 </div><!-- #page-wrap -->

@@ -64,6 +64,14 @@
     <header id="masthead" class="site-header" role="banner">
 
         <div class="header-inner">
+            <div class="container">
+                <!-- Toolbar -->
+                <?php if ( is_active_sidebar( 'toolbar' ) ) : ?>
+                    <aside id="toolbar" class="widget-area" role="complementary">
+                        <?php dynamic_sidebar( 'toolbar' ); ?>
+                    </aside>
+                <?php endif; ?>
+            </div>
             <div id="mobile-logo" class="container">
                 <h1 class="mobile-logo">
                     <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">
@@ -72,12 +80,6 @@
                 </h1>
             </div>
             <div class="container">
-                <!-- Toolbar -->
-                <?php if ( is_active_sidebar( 'toolbar' ) ) : ?>
-                    <aside id="toolbar" class="widget-area" role="complementary">
-                        <?php dynamic_sidebar( 'toolbar' ); ?>
-                    </aside>
-                <?php endif; ?>
                 <div class="menu-wrap">
                     <div class="main-navigation">
                         <nav class="navbar navbar-default">
